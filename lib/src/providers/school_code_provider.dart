@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:myschooly/src/services/apiservice.dart';
-import 'package:myschooly/src/utils/constants.dart';
+import 'package:myschooly/src/services/apiconstants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SchoolCodeProvider with ChangeNotifier {
@@ -22,10 +22,18 @@ class SchoolCodeProvider with ChangeNotifier {
       final data = jsonDecode(res.body) as Map<String, dynamic>;
       final status = data['status']?.toString();
       final target = data['target_url']?.toString();
-      if (status == 'success' && target != null && target.isNotEmpty) {
+      final dbName = data['db']?.toString(); // Assuming the key is 'db'
+
+      if (status == 'success') {
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('target_url', target);
-        debugPrint('Saved target_url: $target');
+        if (target != null && target.isNotEmpty) {
+          await prefs.setString('target_url', target);
+          debugPrint('Saved target_url: $target');
+        }
+        if (dbName != null && dbName.isNotEmpty) {
+          await prefs.setString('school_db_name', dbName);
+          debugPrint('Saved school_db_name: $dbName');
+        }
       }
       result = data;
     } catch (e) {

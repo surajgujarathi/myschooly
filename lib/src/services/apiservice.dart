@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:myschooly/src/services/apierrors.dart';
-import 'package:myschooly/src/utils/constants.dart';
+import 'package:myschooly/src/services/apiconstants.dart';
 
 class ApiService {
   final String? baseOverride;
@@ -25,14 +25,18 @@ class ApiService {
     Map<String, String>? headers,
     Object? body,
   }) {
-    final bodyStr = body is String ? body : body?.toString();
-    debugPrint('[$method] ${url.toString()}');
-    if (headers != null) debugPrint('Headers: $headers');
-    if (bodyStr != null) {
+    debugPrint('🚀 [$method] 🌐 ${url.toString()}');
+
+    if (headers != null) {
+      debugPrint('🧾 Headers: $headers');
+    }
+
+    if (body != null) {
+      final bodyStr = body is String ? body : body.toString();
       final trimmed = bodyStr.length > 1000
           ? '${bodyStr.substring(0, 1000)}…'
           : bodyStr;
-      debugPrint('Request Body: $trimmed');
+      debugPrint('📦 Request Body: $trimmed');
     }
   }
 
@@ -41,8 +45,16 @@ class ApiService {
     final trimmed = bodyStr.length > 1500
         ? '${bodyStr.substring(0, 1500)}…'
         : bodyStr;
-    debugPrint('Response [${res.statusCode}] ${res.request?.url}');
-    debugPrint('Response Body: $trimmed');
+
+    if (res.statusCode >= 200 && res.statusCode < 300) {
+      debugPrint('✅ Response Success');
+    } else {
+      debugPrint('❌ Response Error');
+    }
+
+    debugPrint('🔢 Status Code: ${res.statusCode}');
+    debugPrint('🌐 URL: ${res.request?.url}');
+    debugPrint('📦 Response Body: $trimmed');
   }
 
   Future<http.Response> get(
