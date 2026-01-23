@@ -13,6 +13,7 @@ class AuthProvider with ChangeNotifier {
   String? token;
   String? userRole;
   bool isInitialized = false;
+  bool onboardingSeen = false;
 
   bool get isAuthenticated => token != null;
 
@@ -21,12 +22,20 @@ class AuthProvider with ChangeNotifier {
       token = await _storage.read(key: 'access_token');
       final prefs = await SharedPreferences.getInstance();
       userRole = prefs.getString('user_role');
+      onboardingSeen = prefs.getBool('onboarding_seen') ?? false;
     } catch (e) {
       debugPrint('Error checking auth: $e');
     } finally {
       isInitialized = true;
       notifyListeners();
     }
+  }
+
+  Future<void> completeOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('onboarding_seen', true);
+    onboardingSeen = true;
+    notifyListeners();
   }
 
   Future<void> login(String username, String password) async {
