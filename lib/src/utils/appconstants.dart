@@ -7,3 +7,6 @@ const Color schooolyGrey = Color(0xFF6E6E6E);
 const Color schoolyLightBlues = Color(0xFFC3D0F6);
 const Color schoolyPrimaryBlue = Color(0xFF3B82F6);
 const Color schoolyDarkBlues = Color(0xFF1E3A8A);
+const primary = Color(0xFF3F82F7); // your app blue
+const primaryLight = Color(0xFFEBF2FF);
+const white = Colors.white;

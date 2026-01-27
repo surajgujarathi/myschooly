@@ -52,13 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (auth.userRole == 'central') {
         context.go('/admin');
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Login successful'),
-            backgroundColor: Colors.green,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        context.go('/student');
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
