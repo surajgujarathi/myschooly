@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:myschooly/src/utils/appconstants.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 
@@ -83,7 +84,7 @@ class _SchoolCodeScreenState extends State<SchoolCodeScreen> {
             right: -60,
             child: CircleAvatar(
               radius: 120,
-              backgroundColor: Colors.white.withOpacity(0.06),
+              backgroundColor: Colors.white.withValues(alpha: .06),
             ),
           ),
 
@@ -127,10 +128,10 @@ class _SchoolCodeScreenState extends State<SchoolCodeScreen> {
                           child: Container(
                             padding: const EdgeInsets.all(32),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.15),
+                              color: Colors.white.withValues(alpha: 0.15),
                               borderRadius: BorderRadius.circular(32),
                               border: Border.all(
-                                color: Colors.white.withOpacity(0.2),
+                                color: Colors.white.withValues(alpha: 0.2),
                                 width: 1.5,
                               ),
                             ),
@@ -156,7 +157,7 @@ class _SchoolCodeScreenState extends State<SchoolCodeScreen> {
                                   style: TextStyle(
                                     fontSize: 15,
                                     height: 1.4,
-                                    color: Colors.white.withOpacity(0.8),
+                                    color: Colors.white.withValues(alpha: 0.8),
                                   ),
                                 ),
 
@@ -224,9 +225,24 @@ class _SchoolCodeScreenState extends State<SchoolCodeScreen> {
                       const SizedBox(height: 40),
 
                       /// HELP TEXT
-                      Text(
-                        "Need help finding your code?",
-                        style: TextStyle(color: Colors.white.withOpacity(0.7)),
+                      TextButton(
+                        onPressed: () {
+                          context.go('/student');
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              backgroundColor: schoolyPink,
+                              content: Text(
+                                'Please contact your administrator',
+                              ),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          "Need help finding your code?",
+                          style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.7),
+                          ),
+                        ),
                       ),
                     ],
                   ),
