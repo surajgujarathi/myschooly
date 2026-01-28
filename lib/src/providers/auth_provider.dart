@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:myschooly/src/services/apiservice.dart';
 import 'package:myschooly/src/services/apiconstants.dart';
+import 'package:myschooly/src/models/verify_token_model.dart';
 
 class AuthProvider with ChangeNotifier {
   final _storage = const FlutterSecureStorage();
@@ -12,6 +14,7 @@ class AuthProvider with ChangeNotifier {
   Map<String, dynamic>? profile;
   String? token;
   String? userRole;
+  UserData? userData;
   bool isInitialized = false;
   bool onboardingSeen = false;
 
@@ -23,12 +26,86 @@ class AuthProvider with ChangeNotifier {
       final prefs = await SharedPreferences.getInstance();
       userRole = prefs.getString('user_role');
       onboardingSeen = prefs.getBool('onboarding_seen') ?? false;
+
+      if (token != null) {
+        await fetchUserDetails();
+      }
     } catch (e) {
       debugPrint('Error checking auth: $e');
     } finally {
       isInitialized = true;
       notifyListeners();
     }
+  }
+
+  Future<void> fetchUserDetails({bool force = false}) async {
+    if (token == null) return;
+    if (isLoading && !force) return;
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final base = prefs.getString('target_url') ?? ApiConstants.baseUrl;
+      final dbName = prefs.getString('school_db_name');
+
+      final api = ApiService(baseOverride: base);
+
+      final Map<String, String> body = {'access_token': token!};
+      if (dbName != null) {
+        body['db'] = dbName;
+      }
+
+      final res = await api.postForm(ApiConstants.verifyTokenApi, body);
+      final jsonMap = jsonDecode(res.body) as Map<String, dynamic>;
+      final response = VerifyTokenResponse.fromJson(jsonMap);
+
+      if (response.status == 'success') {
+        final newData = response.data;
+        if (newData != null) {
+          bool shouldNotify = false;
+
+          // Check if data actually changed
+          if (userData != newData) {
+            userData = newData;
+            shouldNotify = true;
+          }
+
+          // Check if role specifically changed (and needs persisting)
+          if (newData.userRole != null && userRole != newData.userRole) {
+            userRole = newData.userRole;
+            await prefs.setString('user_role', userRole!);
+            shouldNotify = true;
+          }
+
+          if (shouldNotify) {
+            notifyListeners();
+          }
+        }
+      } else if (response.status == 'error' &&
+          (response.message?.contains('Token expired') ?? false)) {
+        await logout();
+      }
+    } catch (e) {
+      debugPrint('Error fetching user details: $e');
+      if (e.toString().contains('Token expired') ||
+          e.toString().contains('invalid')) {
+        await logout();
+      }
+    }
+  }
+
+  Future<void> logout() async {
+    token = null;
+    userRole = null;
+    userData = null;
+    error = null;
+
+    await _storage.delete(key: 'access_token');
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('user_role');
+    await prefs.remove('uid');
+    // Note: We keep 'target_url' and 'school_db_name' so user doesn't need to re-enter school code
+
+    notifyListeners();
   }
 
   Future<void> completeOnboarding() async {
@@ -78,6 +155,8 @@ class AuthProvider with ChangeNotifier {
             userRole = responseData['user_role'].toString();
             await prefs.setString('user_role', userRole!);
           }
+          // Fetch full details immediately
+          await fetchUserDetails(force: true);
         }
       } else {
         error = data['message']?.toString() ?? 'Login failed';

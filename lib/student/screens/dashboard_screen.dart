@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:myschooly/src/providers/auth_provider.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -10,7 +12,7 @@ class DashboardScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildHeader(),
+          _buildHeader(context),
           _buildQuickStats(),
           _buildTodaySchedule(),
           _buildMenuGrid(context),
@@ -19,9 +21,19 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
+    final auth = context.watch<AuthProvider>();
+    final userData = auth.userData;
+    final name = userData?.name ?? 'Student';
+    // final userClass = userData?['class'] ?? 'Class 10-A • Science Stream'; // Placeholder if class is not in response yet
+
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.fromLTRB(
+        20,
+        60,
+        20,
+        20,
+      ), // Added top padding for status bar
       decoration: const BoxDecoration(
         color: Color(0xFF3B82F6),
         borderRadius: BorderRadius.only(
@@ -37,15 +49,15 @@ class DashboardScreen extends StatelessWidget {
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text(
+                children: [
+                  const Text(
                     'Welcome back,',
                     style: TextStyle(color: Colors.white70, fontSize: 16),
                   ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Text(
-                    'Suraj ',
-                    style: TextStyle(
+                    name,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
