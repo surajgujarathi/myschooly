@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 import 'package:myschooly/src/providers/school_code_provider.dart';
 import 'package:myschooly/src/providers/auth_provider.dart';
 import 'package:myschooly/src/providers/network_provider.dart';
@@ -20,21 +21,38 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthProvider()..checkAuth()),
         ChangeNotifierProvider(create: (_) => NetworkProvider()),
       ],
-      child: Builder(
-        builder: (context) {
-          final net = context.read<NetworkProvider>();
-          final auth = context.read<AuthProvider>();
-          final router = AppRouter.build(net, auth);
-          return MaterialApp.router(
-            title: 'MySchooly',
-            theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-              useMaterial3: true,
-            ),
-            routerConfig: router,
-          );
-        },
+      child: const SchoolyApp(),
+    );
+  }
+}
+
+class SchoolyApp extends StatefulWidget {
+  const SchoolyApp({super.key});
+
+  @override
+  State<SchoolyApp> createState() => _SchoolyAppState();
+}
+
+class _SchoolyAppState extends State<SchoolyApp> {
+  late final GoRouter _router;
+
+  @override
+  void initState() {
+    super.initState();
+    final net = context.read<NetworkProvider>();
+    final auth = context.read<AuthProvider>();
+    _router = AppRouter.build(net, auth);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      title: 'MySchooly',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
       ),
+      routerConfig: _router,
     );
   }
 }
