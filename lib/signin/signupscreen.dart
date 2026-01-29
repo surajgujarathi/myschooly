@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myschooly/src/utils/appconstants.dart';
+import 'package:myschooly/src/utils/colorsconstants.dart';
 import 'package:myschooly/viewcomponents/mstextfield.dart';
 
 class SignUpScreen extends StatefulWidget {

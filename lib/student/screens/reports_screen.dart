@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myschooly/src/utils/appconstants.dart';
+import 'package:myschooly/src/utils/colorsconstants.dart';
 
 class ReportsScreen extends StatelessWidget {
   const ReportsScreen({super.key});

@@ -4,6 +4,7 @@ import 'package:myschooly/signin/schoolcodescreen.dart';
 import 'package:myschooly/signin/loginscreen.dart';
 import 'package:myschooly/admin/admin_screen.dart';
 import 'package:myschooly/src/screens/offline_screen.dart';
+import 'package:myschooly/src/screens/splash_screen.dart';
 import 'package:myschooly/onboarding/onboarding_screen.dart';
 import 'package:myschooly/src/providers/network_provider.dart';
 import 'package:myschooly/src/providers/auth_provider.dart';
@@ -26,6 +27,11 @@ class AppRouter {
       refreshListenable: Listenable.merge([net, auth]),
       routes: [
         GoRoute(
+          path: '/splash',
+          builder: (BuildContext context, GoRouterState state) =>
+              const SplashScreen(),
+        ),
+        GoRoute(
           path: '/',
           builder: (BuildContext context, GoRouterState state) =>
               const SchoolCodeScreen(),
@@ -37,8 +43,7 @@ class AppRouter {
         ),
         GoRoute(
           path: '/login',
-          builder: (BuildContext context, GoRouterState state) =>
-              const LoginScreen(),
+          builder: (BuildContext context, GoRouterState state) => LoginScreen(),
         ),
         GoRoute(
           path: '/admin',
@@ -110,7 +115,17 @@ class AppRouter {
 
         // 2. Handle coming back online or normal navigation
         // Wait for auth initialization
-        if (!auth.isInitialized) return null;
+        if (!auth.isInitialized || !auth.minSplashElapsed) return '/splash';
+
+        final onSplash = state.uri.path == '/splash';
+        if (onSplash && auth.isInitialized && auth.minSplashElapsed) {
+          if (!auth.onboardingSeen) return '/onboarding';
+          if (auth.isAuthenticated) {
+            final isCentral = auth.userRole == 'central';
+            return isCentral ? '/admin' : '/student';
+          }
+          return '/';
+        }
 
         final onOnboarding = state.uri.path == '/onboarding';
 

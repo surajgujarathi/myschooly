@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:myschooly/src/utils/appconstants.dart' as AppColor;
+import 'package:myschooly/src/utils/colorsconstants.dart' as AppColor;
 
 class StudentLayout extends StatefulWidget {
   final Widget child;

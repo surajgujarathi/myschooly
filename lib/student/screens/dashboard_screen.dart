@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:myschooly/src/providers/auth_provider.dart';
+import 'package:myschooly/src/widgets/confirm_dialog.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -65,11 +66,33 @@ class DashboardScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              const CircleAvatar(
-                radius: 25,
-                backgroundImage: NetworkImage(
-                  'https://i.pravatar.cc/150?img=12',
-                ),
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () async {
+                      final confirmed = await showConfirmationDialog(
+                        context,
+                        title: 'Confirm logout',
+                        content: 'Are you sure you want to logout?',
+                        confirmText: 'Logout',
+                        cancelText: 'Cancel',
+                      );
+                      if (confirmed == true) {
+                        await context.read<AuthProvider>().logout();
+                        if (context.mounted) context.go('/');
+                      }
+                    },
+                    icon: const Icon(Icons.logout, color: Colors.white),
+                    tooltip: 'Logout',
+                  ),
+                  const SizedBox(width: 8),
+                  const CircleAvatar(
+                    radius: 25,
+                    backgroundImage: NetworkImage(
+                      'https://i.pravatar.cc/150?img=12',
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

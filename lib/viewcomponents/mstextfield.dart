@@ -298,8 +298,8 @@ class _MSFormFieldState extends State<MSFormField> {
       return IconButton(
         icon: Icon(
           _obscureText
-              ? Icons.visibility_outlined
-              : Icons.visibility_off_outlined,
+              ? Icons.visibility_off_outlined
+              : Icons.visibility_outlined,
           color: Theme.of(context).colorScheme.onSurfaceVariant,
         ),
         onPressed: () => setState(() => _obscureText = !_obscureText),

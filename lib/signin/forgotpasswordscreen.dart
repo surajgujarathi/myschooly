@@ -1,5 +1,6 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:myschooly/src/utils/appconstants.dart';
+import 'package:myschooly/src/utils/colorsconstants.dart';
 import 'package:myschooly/viewcomponents/mstextfield.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -39,6 +40,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       const SnackBar(
         content: Text('Password reset link sent'),
         backgroundColor: Colors.green,
+        behavior: SnackBarBehavior.floating,
       ),
     );
   }
@@ -46,136 +48,202 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-
-      /// App bar (clean & simple)
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black87,
-        centerTitle: true,
-        title: const Text(
-          "Forgot Password",
-          style: TextStyle(fontWeight: FontWeight.w600),
-        ),
-      ),
-
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 28),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SizedBox(height: 32),
-
-                  /// Icon
-                  Icon(
-                    Icons.lock_reset_rounded,
-                    size: 72,
-                    color: schoolyDarkBlue,
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  /// Title
-                  const Text(
-                    "Reset your password",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  /// Description
-                  const Text(
-                    "Enter your registered email address and we’ll send you a password reset link.",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.black54,
-                      height: 1.4,
-                    ),
-                  ),
-
-                  const SizedBox(height: 40),
-
-                  /// Email field
-                  MSFormField(
-                    type: MSFormFieldType.email,
-                    controller: _emailController,
-                    textInputAction: TextInputAction.done,
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return 'Email is required';
-                      }
-                      if (!value.contains('@')) {
-                        return 'Enter a valid email';
-                      }
-                      return null;
-                    },
-                  ),
-
-                  const SizedBox(height: 32),
-
-                  /// Submit button
-                  SizedBox(
-                    height: 52,
-                    child: ElevatedButton(
-                      onPressed: _isLoading || _emailSent ? null : _handleReset,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: schoolyDarkBlue,
-                        foregroundColor: Colors.white,
-                        elevation: 0, // flat modern style
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                      ),
-                      child: _isLoading
-                          ? const SizedBox(
-                              height: 22,
-                              width: 22,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2.5,
-                                color: Colors.white,
-                              ),
-                            )
-                          : Text(
-                              _emailSent ? "Link Sent" : "Send Reset Link",
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  /// Back to login
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: Text(
-                      "Back to Sign In",
-                      style: TextStyle(
-                        color: schoolyDarkBlue,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 32),
-                ],
+      body: Stack(
+        children: [
+          /// =====================
+          /// BACKGROUND GRADIENT
+          /// =====================
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [schoolyLightBlue1, schoolyPrimaryBlue],
               ),
             ),
           ),
-        ),
+
+          /// =====================
+          /// DECOR CIRCLE
+          /// =====================
+          Positioned(
+            top: -60,
+            right: -60,
+            child: CircleAvatar(
+              radius: 120,
+              backgroundColor: Colors.white.withOpacity(0.06),
+            ),
+          ),
+
+          SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 20),
+
+                      /// =====================
+                      /// ICON
+                      /// =====================
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white.withOpacity(0.15),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.15),
+                              blurRadius: 20,
+                              spreadRadius: 5,
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          Icons.lock_reset_rounded,
+                          size: 48,
+                          color: Colors.white,
+                        ),
+                      ),
+
+                      const SizedBox(height: 40),
+
+                      /// =====================
+                      /// GLASS CARD
+                      /// =====================
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(32),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+                          child: Container(
+                            padding: const EdgeInsets.all(32),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.15),
+                              borderRadius: BorderRadius.circular(32),
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.2),
+                                width: 1.5,
+                              ),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                /// TITLE
+                                const Text(
+                                  "Forgot Password",
+                                  style: TextStyle(
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.w800,
+                                    color: Colors.white,
+                                  ),
+                                ),
+
+                                const SizedBox(height: 8),
+
+                                /// SUBTITLE
+                                Text(
+                                  "Enter your email to receive a reset link",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.white.withOpacity(0.8),
+                                  ),
+                                ),
+
+                                const SizedBox(height: 32),
+
+                                /// EMAIL FIELD
+                                Theme(
+                                  data: Theme.of(
+                                    context,
+                                  ).copyWith(primaryColor: Colors.white),
+                                  child: MSFormField(
+                                    controller: _emailController,
+                                    labelText: "Email",
+                                    hintText: "yourname@email.com",
+                                    prefixIcon: Icons.email_outlined,
+                                    keyboardType: TextInputType.emailAddress,
+                                    validator: (value) {
+                                      if (value == null ||
+                                          value.trim().isEmpty) {
+                                        return 'Email is required';
+                                      }
+                                      if (!value.contains('@')) {
+                                        return 'Enter a valid email';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ),
+
+                                const SizedBox(height: 28),
+
+                                /// SUBMIT BUTTON
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 56,
+                                  child: ElevatedButton(
+                                    onPressed: _isLoading || _emailSent
+                                        ? null
+                                        : _handleReset,
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      foregroundColor: schoolyDarkBlue1,
+                                      elevation: 0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                    ),
+                                    child: _isLoading
+                                        ? const SizedBox(
+                                            height: 24,
+                                            width: 24,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                            ),
+                                          )
+                                        : Text(
+                                            _emailSent
+                                                ? "Link Sent"
+                                                : "Send Reset Link",
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                  ),
+                                ),
+
+                                const SizedBox(height: 16),
+
+                                /// BACK TO LOGIN
+                                Center(
+                                  child: TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: const Text(
+                                      "Back to Sign In",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 40),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

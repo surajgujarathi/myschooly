@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myschooly/src/utils/appconstants.dart';
+import 'package:myschooly/src/utils/colorsconstants.dart';
 
 class MessagesScreen extends StatelessWidget {
   const MessagesScreen({super.key});
