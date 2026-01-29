@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myschooly/src/utils/appconstants.dart'; // ← schoolyDarkBlue is here
+import 'package:myschooly/src/utils/colorsconstants.dart'; // ← schoolyDarkBlue is here
 
 class OfflineScreen extends StatelessWidget {
   const OfflineScreen({super.key});

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:myschooly/src/providers/auth_provider.dart';
 
 class AdminScreen extends StatefulWidget {
   const AdminScreen({super.key});
@@ -29,14 +30,10 @@ class _AdminScreenState extends State<AdminScreen> {
   }
 
   Future<void> _logout() async {
-    const storage = FlutterSecureStorage();
-    await storage.delete(key: 'access_token');
-    
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('auth_token'); // Remove legacy token if any
-    
+    final auth = context.read<AuthProvider>();
+    await auth.logout();
     if (mounted) {
-      context.go('/login');
+      context.go('/');
     }
   }
 
@@ -57,7 +54,11 @@ class _AdminScreenState extends State<AdminScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.admin_panel_settings, size: 80, color: Colors.blue),
+            const Icon(
+              Icons.admin_panel_settings,
+              size: 80,
+              color: Colors.blue,
+            ),
             const SizedBox(height: 20),
             Text(
               'Welcome, ${_userRole ?? "User"}',

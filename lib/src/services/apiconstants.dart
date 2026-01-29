@@ -7,4 +7,6 @@ class ApiConstants {
   static const String loginApi = '/api/mobile/login';
   //verify token  api
   static const String verifyTokenApi = '/api/mobile/verify_token';
+  //logout api
+  static const String logoutApi = '/api/mobile/logout';
 }

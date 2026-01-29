@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:myschooly/src/utils/colorsconstants.dart';
 import 'package:provider/provider.dart';
 
 import 'package:go_router/go_router.dart';
@@ -11,7 +12,7 @@ import 'package:myschooly/viewcomponents/mstextfield.dart';
 /// COLOR CONSTANTS
 /// =====================
 const Color schoolyLightBlue = Color(0xFFC3D0F6);
-const Color schoolyPrimaryBlue = Color(0xFF3B82F6);
+
 const Color schoolyDarkBlue = Color(0xFF1E3A8A);
 
 class LoginScreen extends StatefulWidget {
@@ -55,6 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
         context.go('/student');
       }
     } else {
+      debugPrint(auth.error);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(auth.error!),
@@ -198,15 +200,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                 /// PASSWORD
                                 MSFormField(
+                                  type: MSFormFieldType.password,
                                   controller: _passwordController,
                                   labelText: "Password",
-                                  prefixIcon: Icons.lock_outline,
-                                  obscureText: true,
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
                                       return 'Password is required';
                                     }
-
                                     return null;
                                   },
                                 ),

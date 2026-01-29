@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:myschooly/src/utils/appconstants.dart';
+import 'package:myschooly/src/utils/colorsconstants.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 
@@ -227,7 +227,6 @@ class _SchoolCodeScreenState extends State<SchoolCodeScreen> {
                       /// HELP TEXT
                       TextButton(
                         onPressed: () {
-                          context.go('/student');
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               backgroundColor: schoolyPink,
