@@ -44,6 +44,7 @@ dependencies:
   flutter_secure_storage: ^10.0.0
   go_router: ^17.0.1
   connectivity_plus: ^7.0.0
+  flutter_launcher_icons: ^0.14.4
 
 dev_dependencies:
   flutter_test:
@@ -55,6 +56,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+  
 
 
 # For information on the generic Dart part of this file, see the
@@ -98,3 +100,14 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/skkolylogo.jpg"
+  min_sdk_android: 21
+  # adaptive_icon_background: "#080447"
+  adaptive_icon_foreground: "assets/skkolylogo.jpg"
+  # background_color: "#080447" # This ensures the background color for non-adaptive icons
+  adaptive_icon: true
