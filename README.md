@@ -1,4 +1,4 @@
-# myschooly
+# myskooly
 
 A new Flutter project.
 
